@@ -22,17 +22,16 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModelMain= ViewModelProvider(this).get(ViewModelMain::class.java)
-        val fib=ArrayList<Int>()
-        fib.clear()
-        for(i in 1..viewModelMain.count){
-            fib.add(viewModelMain.first)
-            val next=viewModelMain.first+viewModelMain.secound
-            viewModelMain.first=viewModelMain.secound
-            viewModelMain.secound=next
-
-        }
-        val adaptor: ArrayAdapter<Int> = ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1,fib)
-        binding.listView.adapter=adaptor
+//        val fib=ArrayList<Int>()
+//
+//        for(i in 1..viewModelMain.count){
+//            fib.add(viewModelMain.first)
+//            val next=viewModelMain.first+viewModelMain.secound
+//            viewModelMain.first=viewModelMain.secound
+//            viewModelMain.secound=next
+//
+//        }
+        createList()
 
 
         auth=FirebaseAuth.getInstance()
@@ -46,6 +45,7 @@ class MainActivity : AppCompatActivity() {
                 setPositiveButton("OK"){dialog,which->
                    var count =text.text.toString().toInt()
                     viewModelMain.updateCount(count)
+                    createList()
                 }
                 setView(dialogLayout)
                 show()
@@ -55,9 +55,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun createFibonacci() {
-
+    private fun createList() {
+        val adaptor: ArrayAdapter<Int> = ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1,viewModelMain.getList())
+        binding.listView.adapter=adaptor
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.logout,menu)
