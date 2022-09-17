@@ -3,6 +3,8 @@ package com.example.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
 import android.widget.Toast
 import com.example.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -23,11 +25,13 @@ class LoginActivity : AppCompatActivity() {
         }else {
             binding= ActivityLoginBinding.inflate(layoutInflater)
             setContentView(binding.root)
+            binding.progressCircular2.visibility= View.INVISIBLE
             binding.signup.setOnClickListener {
                 intent = Intent(this, SignupActivity::class.java)
                 startActivity(intent)
             }
             binding.login.setOnClickListener {
+                binding.progressCircular2.visibility= View.VISIBLE
                 loginUser()
             }
 
@@ -46,20 +50,25 @@ class LoginActivity : AppCompatActivity() {
 
         if(email.isEmpty()){
             binding.logUser.error = "FILL"
-            binding.logPassword.requestFocus()
+            binding.logUser.requestFocus()
+            binding.progressCircular2.visibility= View.INVISIBLE
         }else if(password.isEmpty()){
-            binding.logUser.error = "FILL"
-            binding.logPassword.requestFocus()
+            var toast=Toast.makeText(applicationContext,"Fill password", Toast.LENGTH_LONG)
+            toast?.setGravity(Gravity.TOP,0,0)
+            toast?.show()
+            binding.progressCircular2.visibility= View.INVISIBLE
         }else{
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { signIn ->
                     if (signIn.isSuccessful) {
                         intent= Intent(this,MainActivity::class.java)
                         startActivity(intent)
+                        binding.progressCircular2.visibility= View.INVISIBLE
                         Toast.makeText(applicationContext,"registered", Toast.LENGTH_LONG).show()
 
                     } else {
-                        Toast.makeText(applicationContext,"Failed", Toast.LENGTH_LONG).show()
+                        binding.progressCircular2.visibility= View.INVISIBLE
+                        Toast.makeText(applicationContext,"Enter the valid credentials", Toast.LENGTH_SHORT).show()
                     }
                 }
         }

@@ -22,15 +22,6 @@ class MainActivity : AppCompatActivity() {
         binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModelMain= ViewModelProvider(this).get(ViewModelMain::class.java)
-//        val fib=ArrayList<Int>()
-//
-//        for(i in 1..viewModelMain.count){
-//            fib.add(viewModelMain.first)
-//            val next=viewModelMain.first+viewModelMain.secound
-//            viewModelMain.first=viewModelMain.secound
-//            viewModelMain.secound=next
-//
-//        }
         createList()
 
 
@@ -43,9 +34,12 @@ class MainActivity : AppCompatActivity() {
             with(builder){
                 setTitle("Enter the number")
                 setPositiveButton("OK"){dialog,which->
-                   var count =text.text.toString().toInt()
-                    viewModelMain.updateCount(count)
-                    createList()
+                    if(!text.text.toString().isEmpty()){
+                        var count =text.text.toString().toInt()
+                        viewModelMain.updateCount(count)
+                        createList()
+                    }
+
                 }
                 setView(dialogLayout)
                 show()
@@ -69,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         auth.signOut()
         intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-
 
         return super.onOptionsItemSelected(item)
     }
